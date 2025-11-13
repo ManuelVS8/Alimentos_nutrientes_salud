@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Nutrientes, alimentación y salud</title>
+<style>
+  /* ====== Reset & base ====== */
+  * { box-sizing: border-box; margin:0; padding:0; }
+  :root{
+    --blue:#07145e;
+    --blue-dark:#04032B;
+    --blue-700:#1a3a5f;
+    --blue-600:#254fba;
+    --orange:#f59e42;
+    --orange-700:#e67e22;
+    --bg-grad-1:#1a3a5f;
+    --bg-grad-2:#0d2340;
+    --white:#ffffff;
+    --green:#2ecc71;
+    --red:#e74c3c;
+    --panel:#E8EAFF;
+  }
+  body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+    min-height:100vh; display:flex; justify-content:center; align-items:center; color:#333; padding:10px;
+  }
+  .game-container{
+    background:var(--white); border-radius:16px; box-shadow:0 12px 24px rgba(0,0,0,.12);
+    padding:1.2rem; max-width:980px; width:100%; min-height:680px;
+    position:relative; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  header{ text-align:center; margin-bottom:.8rem; margin-top:2rem; }
+  h1{ color:var(--blue); font-size:clamp(2rem,5.2vw,3.1rem); font-weight:900; letter-spacing:.5px; }
+  .subtitle{ color:var(--blue-700); font-size:clamp(1rem,3.5vw,1.25rem); margin-top:.25rem; }
+  .highlight-keyword{ color:var(--orange); font-weight:800; }
+
+  /* Global UI bits to mirror style of reference app */
+  .btn{ color:#fff; border:none; padding:.75rem 1.2rem; border-radius:10px; cursor:pointer; font-weight:800;
+        transition:transform .08s ease, box-shadow .2s ease, background-color .25s ease; min-width:140px; height:48px;
+        display:inline-flex; align-items:center; justify-content:center; }
+  .btn:hover{ transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,.12); }
+  .btn:active{ transform:translateY(0); }
+  .btn:disabled{ opacity: .6; cursor: not-allowed; }
+  .btn-primary{ background:var(--orange); }
+  .btn-primary:hover{ background:var(--orange-700); }
+  .btn-blue{ background:var(--blue-600); }
+  .btn-blue:hover{ filter:brightness(.9); }
+  .btn-ghost{ background:#e6f2ff; color:var(--blue-700); }
+
+  .screen{ display:none; animation:fadeIn .35s ease; }
+  .screen.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
+
+  /* Top controls (timer / progress / level) */
+  .game-info{ display:flex; gap:.6rem; align-items:center; justify-content:space-between; margin:.4rem 0 1rem; flex-wrap:wrap; }
+  .timer, .level-indicator{ font-weight:900; color:var(--blue-700); font-size:clamp(.95rem,2.3vw,1.15rem); }
+  .progress-bar{ flex:1; height:10px; background:#e6f2ff; border-radius:999px; overflow:hidden; }
+  .progress-fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--orange) 0%, var(--orange-700) 100%); transition:width .3s ease; }
+
+  /* Start screen */
+  .start-content, .intro-content, .transition-content { display:flex; flex-direction:column; justify-content:center; align-items:center; flex:1; gap:1rem; padding:1rem; }
+  .advice-box{ background:var(--panel); border-left:4px solid var(--blue-700); padding:1rem 1.2rem; border-radius:12px;
+               color:var(--blue-700); max-width:760px; text-align:center; font-size:clamp(1rem,3vw,1.15rem); }
+  .start-image{ max-width: 300px; width: 100%; margin: 0 auto; display: block; }
+  .intro-text{ 
+    font-size: clamp(1.2rem, 4vw, 1.6rem); 
+    font-weight: 600; 
+    color: var(--blue-700);
+    text-align: center;
+    margin: 2rem 0;
+  }
+  .intro-text strong {
+      color: var(--orange);
+      font-weight: 800;
+  }
+
+  /* Sound button */
+  .mute-btn{ position:absolute; top:.8rem; right:.8rem; background:var(--orange); color:#fff; border:2px solid #fff; width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; z-index:20; }
+  .mute-btn:hover{ background:var(--orange-700); }
+
+  /* Game layout */
+  .board{ display:flex; flex-direction:column; gap:.8rem; align-items:center; }
+
+  /* Image stage - REDUCIDO */
+  .image-container { width:100%; max-width:320px; margin:0 auto; padding:.8rem; border:1px solid #ddd; border-radius:10px;}
+  .image-container img { display: block; width: 100%; height: auto; border-radius: 8px; object-fit: contain; }
+
+  /* Dropdown styling (Select List) - REDUCIDO */
+  .select-container { position:relative; max-width: 240px; width: 100%; margin: 0.5rem auto; text-align: center; }
+  .select-label { display: block; margin-bottom: 0.4rem; font-weight: 800; color: var(--blue-700); font-size: 0.95rem; }
+  .custom-select {
+    position: relative;
+    font-family: inherit;
+    width: 100%;
+    cursor: pointer;
+    background-color: #f8fbff;
+    border: 2px solid #d3e2ff;
+    border-radius: 10px;
+    padding: 0.6rem 0.85rem;
+    color: var(--blue-700);
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  .custom-select:hover { border-color: var(--blue-600); }
+  .select-arrow { transition: transform 0.2s; font-size: 0.85rem; }
+  .select-options {
+    position: absolute;
+    top: auto;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: var(--white);
+    border: 1px solid #ddd;
+    border-radius: 10px 10px 0 0;
+    max-height: 0;
+    overflow-y: auto;
+    transition: max-height 0.3s ease-out;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    margin-bottom: -1px;
+  }
+  .select-options.open { 
+    max-height: 350px;
+    border-bottom: none; 
+  }
+  .select-option {
+    padding: 0.65rem 0.85rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #333;
+    text-align: left;
+    transition: background-color 0.1s;
+  }
+  .select-option:hover { background-color: #f0f0f0; }
+
+  /* Dropdown state styles */
+  .custom-select.correct { border-color: var(--green); background-color: #ecfff4; }
+  .custom-select.incorrect { border-color: var(--red); background-color: #fff1f1; }
+
+  .select-selected {
+    padding: 0.6rem 0.85rem;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+  .select-selected.correct-blink { animation: correct-flash 0.3s linear; }
+  .select-selected.incorrect-blink { animation: incorrect-flash 0.3s linear; }
+
+  @keyframes correct-flash { 0% { background-color: #ecfff4; } 50% { background-color: var(--green); } 100% { background-color: #ecfff4; } }
+  @keyframes incorrect-flash { 0% { background-color: #fff1f1; } 50% { background-color: var(--red); } 100% { background-color: #fff1f1; } }
+
+  /* Buttons area - REDUCIDO EL GAP */
+  .game-buttons-area { display: flex; justify-content: center; gap: 1rem; margin-top: 0.8rem; }
+
+  /* Matching game styles for Game 2 */
+  .matching-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .matching-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  
+  .matching-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .matching-card {
+    background-color: var(--panel);
+    border: 2px solid var(--blue-700);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--blue-700);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .matching-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .matching-card.selected {
+    background-color: var(--blue-600);
+    color: white;
+    border-color: var(--blue-600);
+  }
+  
+  .matching-card.correct {
+    background-color: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+  
+  .matching-card.incorrect {
+    background-color: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+  
+  .matching-result {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-height: 2rem;
+  }
+  
+  .matching-result.correct {
+    color: var(--green);
+  }
+  
+  .matching-result.incorrect {
+    color: var(--red);
+  }
+
+  /* Results screen */
+  .results{ display:flex; flex-direction:column; align-items:center; gap:.6rem; text-align:center; min-height:calc(100vh - 180px); }
+  .final-title{ color:var(--blue-dark); font-weight:900; }
+  .big-score{ font-size:clamp(2.2rem,6vw,3.4rem); color:var(--blue-600); font-weight:900; }
+  .score-title{ font-size:1.0rem; color:var(--blue-700); margin-top:1rem; }
+  .final-time{ color:var(--blue-700); }
+  .trophy{ font-size:clamp(4rem,10vw,6rem); margin:.2rem 0; color:var(--orange); animation:bounce 1s ease infinite; }
+  @keyframes bounce { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-8px);} }
+  .credit{ color:var(--blue-700); margin-top:1rem; }
+  .school-logo{ display:block; margin:1rem auto 0; max-width:160px; height:auto; }
+
+  /* New Final Messages Styling */
+  .final-msg-style {
+      color: var(--blue-dark);
+      font-weight: 800;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      margin: 0.5rem 0 1rem;
+      line-height: 1.4;
+  }
+
+  /* Confetti and Loading (unchanged) */
+  .confetti{ position:fixed; width:10px; height:10px; border-radius:50%; animation: confetti-fall 3s linear forwards; z-index:999; }
+  @keyframes confetti-fall{ 0%{ transform:translate(0, -20px) rotate(0); opacity:1;} 100%{ transform:translate(var(--tx), var(--ty)) rotate(360deg); opacity:0; } }
+  .loading-indicator {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7);
+    display: flex; justify-content: center; align-items: center; z-index: 1000; flex-direction: column;
+  }
+  .loading-spinner {
+    width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--orange);
+    border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  .loading-text { color: white; font-size: 1.2rem; text-align: center; }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .matching-columns {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .matching-container {
+      max-width: 500px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="game-container">
+  <button class="mute-btn" id="muteBtn" title="Silenciar/Activar sonido">🔊</button>
+
+  <section class="screen active" id="startScreen" aria-labelledby="title">
+    <header>
+      <h1 id="title">Nutrientes, alimentación y salud</h1>
+      <div class="subtitle">Comprueba todo lo que sabes sobre alimentación.</div>
+    </header>
+    <div class="start-content">
+      <div class="advice-box" role="note" aria-live="polite">
+        Identifica qué alimentos son ricos en los diferentes <span class="highlight-keyword">nutrientes</span> y demuestra lo que sabes sobre la salud en <span class="highlight-keyword">alimentación</span>. ¡Buena suerte!<br><br>
+        <strong>¡Buena suerte!</strong>
+      </div>
+      <button class="btn btn-primary" id="playBtn">Comenzar</button>
+      <img class="start-image" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Ni%C3%B1os.png" alt="Children learning">
+    </div>
+  </section>
+
+  <section class="screen" id="sampleScreen" aria-labelledby="sampleTitle">
+    <header>
+      <h1 id="sampleTitle">Nutrientes y alimentos</h1>
+      <div class="subtitle">Observa la imagen y memoriza en qué alimentos podemos encontrar los diferentes tipos de nutrientes.</div>
+    </header>
+    <div class="start-content">
+      <div class="image-container" style="max-width: 600px;">
+        <img src="https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/Aparatos/Nutrientes.png" alt="Tabla de nutrientes y alimentos">
+      </div>
+      <button class="btn btn-primary" id="playGameBtn">Jugar</button>
+    </div>
+  </section>
+
+  <section class="screen" id="game1Screen">
+    <header>
+      <h1 id="game1Title">Nutrientes y alimentos</h1>
+      <div class="subtitle">Identifica qué nutrientes destacan en cada alimento.</div>
+    </header>
+    <div class="game-info">
+      <div class="level-indicator" id="level1Indicator">Nivel 1/2</div>
+      <div class="progress-bar" aria-label="Progreso"><div class="progress-fill" id="progress1Fill"></div></div>
+      <div class="timer" id="timer1">00:00</div>
+    </div>
+
+    <div class="board">
+      <div class="image-container">
+        <img id="foodImg" src="" alt="Imagen de un alimento">
+      </div>
+
+      <div class="select-container">
+        <label id="select1Label" for="customSelect1" class="select-label">Nutriente</label>
+        <div id="customSelect1" class="custom-select" role="listbox" tabindex="0" aria-expanded="false" aria-labelledby="select1Label">
+          <span id="select1Selected" class="select-selected">Seleccionar opción</span>
+          <span class="select-arrow">▼</span>
+        </div>
+        <div id="select1Options" class="select-options" role="presentation">
+          </div>
+      </div>
+
+      <div class="game-buttons-area">
+        <button class="btn btn-blue" id="check1Btn">Comprobar</button>
+        <button class="btn btn-primary" id="continue1Btn" style="display:none;">Continuar</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="transitionScreen" aria-labelledby="transitionTitle">
+    <header>
+      <h1 id="transitionTitle">Nutrientes, alimentación y salud</h1>
+    </header>
+    <div class="transition-content">
+      <div class="advice-box" role="note" aria-live="polite">
+        Demuestra lo que sabes sobre los alimentos y la salud
+      </div>
+      <button class="btn btn-primary" id="goToGame2Btn">Ir al juego 2</button>
+    </div>
+  </section>
+
+  <section class="screen" id="game2Screen">
+    <header>
+      <h1 id="game2Title">Alimentos y salud</h1>
+      <div class="subtitle">Relaciona las columnas.</div>
+    </header>
+    <div class="game-info">
+      <div class="level-indicator" id="level2Indicator">Nivel 2/2</div>
+      <div class="progress-bar" aria-label="Progreso"><div class="progress-fill" id="progress2Fill"></div></div>
+      <div class="timer" id="timer2">00:00</div>
+    </div>
+
+    <div class="matching-container">
+      <div class="matching-columns">
+        <div class="matching-column" id="leftColumn">
+          <!-- Left column cards will be generated dynamically -->
+        </div>
+        <div class="matching-column" id="rightColumn">
+          <!-- Right column cards will be generated dynamically -->
+        </div>
+      </div>
+      <div class="matching-result" id="matchingResult"></div>
+      <div class="game-buttons-area">
+        <button class="btn btn-blue" id="check2Btn">Comprobar</button>
+        <button class="btn btn-primary" id="continue2Btn" style="display:none;">Continuar</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="resultsScreen">
+    <header>
+      <h1 class="final-title">Nutrientes, alimentos y salud</h1>
+    </header>
+    <div class="results">
+      <div id="trophyBox" style="display:none;">
+        <div class="trophy">🏆</div>
+      </div>
+      <div class="score-title">Puntuación:</div>
+      <div class="big-score" id="finalScore">0</div>
+      <div id="finalMsg" class="final-msg-style"></div>
+      <div class="final-time">Tiempo empleado: <span id="finalTime">00:00</span></div>
+      <button class="btn btn-primary" id="backToMenuBtn">Volver al menú</button>
+      <span class="credit">Creado por Manuel J. Ventura</span>
+      <img class="school-logo" src="https://github.com/ManuelVS8/Efectos_audio/blob/1e2a36cdd1f8bedcb578a30f5ec5cc8f21c287fe/Siurot.png" alt="School logo" />
+    </div>
+  </section>
+</div>
+
+<div class="loading-indicator" id="loadingIndicator" style="display: none;">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Cargando audios...</div>
+</div>
+
+<script>
+/************** Data **************/
+const FOODS_DATA = [
+  { food: 'Azucar', nutrient: 'Hidratos de carbono', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Azucar.png' },
+  { food: 'Pan', nutrient: 'Hidratos de carbono', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Pan.png' },
+  { food: 'Patata', nutrient: 'Hidratos de carbono', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/patata.png' },
+  { food: 'Pasta', nutrient: 'Hidratos de carbono', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/pasta.png' },
+  { food: 'Carne', nutrient: 'Proteínas', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Carne.png' },
+  { food: 'Huevos', nutrient: 'Proteínas', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Huevos.png' },
+  { food: 'Legumbres', nutrient: 'Proteínas', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Legumbres.png' },
+  { food: 'Pescado', nutrient: 'Proteínas', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Pescado.png' },
+  { food: 'Lacteo', nutrient: 'Proteínas', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/lacteo.png' },
+  { food: 'Aceite', nutrient: 'Grasas', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/Aparatos/Alimentos/Aceite.png' },
+  { food: 'Mantequilla', nutrient: 'Grasas', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Mantequilla.png' },
+  { food: 'Frutas', nutrient: 'Vitaminas y minerales', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Frutas.png' },
+  { food: 'Verduras', nutrient: 'Vitaminas y minerales', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Verduras.png' },
+  { food: 'Agua', nutrient: 'Agua', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/blob/main/Aparatos/Alimentos/Agua.png' }
+];
+
+const NUTRIENTS_OPTIONS = [...new Set(FOODS_DATA.map(d => d.nutrient))];
+
+const MATCHING_DATA = [
+  { left: 'Ejemplos de nutrientes', right: 'Proteínas, hidratos de carbono, vitaminas...' },
+  { left: 'Pueden causar alergias', right: 'Huevos, frutos secos, marisco y pescado' },
+  { left: 'Pirámide de alimentos', right: 'Guía para una alimentación saludable' },
+  { left: 'Pueden causar intolerancia', right: 'Gluten y lactosa' }
+];
+
+const TOTAL_QUESTIONS = FOODS_DATA.length + MATCHING_DATA.length;
+
+/************** Audio **************/
+const soundFiles = {
+  completed: 'https://github.com/ManuelVS8/Efectos_audio/blob/7b86808e254100aeaba6285b3e0b82650ae78055/Completado.mp3',
+  correct:   'https://github.com/ManuelVS8/Efectos_audio/blob/7b86808e254100aeaba6285b3e0b82650ae78055/Correcto.mp3',
+  victory:   'https://github.com/ManuelVS8/Efectos_audio/blob/7b86808e254100aeaba6285b3e0b82650ae78055/Termin%C3%A9.mp3',
+  error:     'https://github.com/ManuelVS8/Efectos_audio/blob/7b86808e254100aeaba6285b3e0b82650ae78055/Error.mp3',
+  tap:       'https://github.com/ManuelVS8/Efectos_audio/blob/37b3eb2da9c15c04dfb71dfe1be60f088ea3cdfc/Tap.mp3'
+};
+const sounds = {}; let isMuted = false; let audioUnlocked = false;
+
+function preloadSounds() {
+  const promises = Object.entries(soundFiles).map(([k, url]) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const a = new Audio(url);
+        a.preload = 'auto';
+        a.oncanplaythrough = () => { sounds[k] = a; resolve(); };
+        a.onerror = () => { console.error(`Error al cargar ${k} de audio: ${url}`); sounds[k] = null; resolve(); };
+      } catch(e) {
+        console.error(`Error al crear Audio para ${k}:`, e);
+        sounds[k] = null;
+        resolve();
+      }
+    });
+  });
+  return Promise.all(promises);
+}
+
+function unlockAudio(){
+  if (audioUnlocked) return;
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g);
+    g.connect(ctx.destination);
+    g.gain.value = 0.0001;
+    o.start();
+    o.stop(ctx.currentTime + 0.02);
+    audioUnlocked = true;
+  } catch(e){
+    console.error("Error al desbloquear audio:", e);
+  }
+}
+
+function play(name){
+  if(!audioUnlocked) { unlockAudio(); return; }
+  if(isMuted) return;
+  const a = sounds[name];
+  if(!a) return;
+  try{
+    const clone = a.cloneNode(true);
+    clone.currentTime = 0;
+    clone.play();
+  } catch(e){
+    console.log(`Audio play error for ${name}`, e);
+  }
+}
+
+const reproducirSonidoCorrecto = () => play('correct');
+const reproducirSonidoError = () => play('error');
+const reproducirSonidoCompletado = () => play('completed');
+const reproducirSonidoVictoria = () => play('victory');
+const reproducirSonidoTap = () => play('tap');
+
+/************** State **************/
+const el = (id) => document.getElementById(id);
+
+const foodImg = el('foodImg');
+const progress1Fill = el('progress1Fill');
+const progress2Fill = el('progress2Fill');
+const timer1El = el('timer1');
+const timer2El = el('timer2');
+const level1IndicatorEl = el('level1Indicator');
+const level2IndicatorEl = el('level2Indicator');
+const check1Btn = el('check1Btn');
+const continue1Btn = el('continue1Btn');
+const check2Btn = el('check2Btn');
+const continue2Btn = el('continue2Btn');
+const customSelect1 = el('customSelect1');
+const select1OptionsEl = el('select1Options');
+const select1SelectedEl = el('select1Selected');
+const select1LabelEl = el('select1Label');
+const playBtn = el('playBtn');
+const playGameBtn = el('playGameBtn');
+const goToGame2Btn = el('goToGame2Btn');
+const loadingIndicator = el('loadingIndicator');
+const finalMsgEl = el('finalMsg');
+const matchingResultEl = el('matchingResult');
+const leftColumnEl = el('leftColumn');
+const rightColumnEl = el('rightColumn');
+
+let game1Order = [];
+let game2Order = [];
+let currentFoodIndex = 0;
+let currentMatchingIndex = 0;
+let correctFirstAttempts = 0;
+let currentQuestionScored = false;
+let timerInt = null;
+let elapsed = 0;
+
+let currentSelection = null;
+let isProcessing = false;
+let userInteracted = false;
+
+// Matching game state
+let selectedLeftCard = null;
+let selectedRightCard = null;
+let matchedPairs = 0;
+let matchingAttempts = 0;
+
+/************** Utilities **************/
+function fmtTime(s){ const m=Math.floor(s/60).toString().padStart(2,'0'); const ss=(s%60).toString().padStart(2,'0'); return `${m}:${ss}`; }
+function startTimer(){ clearInterval(timerInt); timerInt = setInterval(()=>{ elapsed++; timer1El.textContent = fmtTime(elapsed); timer2El.textContent = fmtTime(elapsed); },1000); }
+function stopTimer(){ clearInterval(timerInt); }
+
+function updateProgress(level, progress) {
+  if (level === 1) {
+    const pct = (progress / FOODS_DATA.length) * 100;
+    progress1Fill.style.width = pct + '%';
+    level1IndicatorEl.textContent = `Nivel 1/2`;
+  } else {
+    const pct = (progress / MATCHING_DATA.length) * 100;
+    progress2Fill.style.width = pct + '%';
+    level2IndicatorEl.textContent = `Nivel 2/2`;
+  }
+}
+
+function shuffle(a){ const arr=[...a]; for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    el(screenId).classList.add('active');
+}
+
+/************** Dropdown logic **************/
+function closeSelect() {
+  select1OptionsEl.classList.remove('open');
+  customSelect1.setAttribute('aria-expanded', 'false');
+  customSelect1.classList.remove('active');
+}
+
+function openSelect() {
+  if (isProcessing) return;
+  reproducirSonidoTap();
+  select1OptionsEl.classList.add('open');
+  customSelect1.setAttribute('aria-expanded', 'true');
+  customSelect1.classList.add('active');
+}
+
+function createDropdownOptions(options) {
+  select1OptionsEl.innerHTML = '';
+  options.forEach(option => {
+    const div = document.createElement('div');
+    div.className = 'select-option';
+    div.textContent = option;
+    div.setAttribute('role', 'option');
+    div.setAttribute('aria-selected', 'false');
+    div.dataset.value = option;
+    div.addEventListener('click', onSelectOptionClick);
+    select1OptionsEl.appendChild(div);
+  });
+}
+
+function onSelectOptionClick(e) {
+  reproducirSonidoTap();
+  currentSelection = e.target.dataset.value;
+  select1SelectedEl.textContent = currentSelection;
+  closeSelect();
+  customSelect1.classList.remove('correct', 'incorrect');
+  select1SelectedEl.classList.remove('correct-blink', 'incorrect-blink');
+  
+  if(continue1Btn.style.display === 'none') {
+    check1Btn.style.display = 'inline-flex';
+    check1Btn.disabled = false;
+  }
+  
+  select1SelectedEl.style.backgroundColor = 'transparent';
+}
+
+customSelect1.addEventListener('click', (e) => {
+  if (select1OptionsEl.classList.contains('open')) {
+    closeSelect();
+  } else {
+    openSelect();
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if (!customSelect1.contains(e.target) && !select1OptionsEl.contains(e.target)) {
+    closeSelect();
+  }
+});
+
+/************** Game 1 Flow **************/
+function setupGame1() {
+  currentFoodIndex = 0;
+  game1Order = shuffle([...Array(FOODS_DATA.length).keys()]);
+  createDropdownOptions(NUTRIENTS_OPTIONS);
+  showCurrentFood();
+  updateProgress(1, 0);
+  showScreen('game1Screen');
+}
+
+function showCurrentFood() {
+  isProcessing = false;
+  currentQuestionScored = false;
+  const currentFood = FOODS_DATA[game1Order[currentFoodIndex]];
+  foodImg.src = currentFood.image;
+  foodImg.alt = `Imagen de ${currentFood.food}`;
+
+  currentSelection = null;
+  select1SelectedEl.textContent = `Seleccionar opción`;
+  customSelect1.classList.remove('correct', 'incorrect');
+  select1SelectedEl.classList.remove('correct-blink', 'incorrect-blink');
+  check1Btn.style.display = 'inline-flex';
+  check1Btn.disabled = false;
+  continue1Btn.style.display = 'none';
+}
+
+function checkAnswer() {
+  if (isProcessing || currentSelection === null) return;
+  isProcessing = true;
+
+  const currentFood = FOODS_DATA[game1Order[currentFoodIndex]];
+  const correctAnswer = currentFood.nutrient;
+
+  if (currentSelection === correctAnswer) {
+    if (!currentQuestionScored) {
+        correctFirstAttempts++;
+    }
+    currentQuestionScored = true;
+
+    reproducirSonidoCorrecto();
+    customSelect1.classList.add('correct');
+    select1SelectedEl.classList.add('correct-blink');
+    check1Btn.disabled = true;
+
+    setTimeout(() => {
+      moveToNextFood();
+    }, 500);
+  } else {
+    currentQuestionScored = true;
+    reproducirSonidoError();
+    customSelect1.classList.add('incorrect');
+    select1SelectedEl.classList.add('incorrect-blink');
+    
+    check1Btn.style.display = 'none';
+    continue1Btn.style.display = 'inline-flex';
+    isProcessing = false;
+  }
+}
+
+function moveToNextFood() {
+  currentFoodIndex++;
+  updateProgress(1, currentFoodIndex);
+
+  if (currentFoodIndex < FOODS_DATA.length) {
+    showCurrentFood();
+  } else {
+    showTransitionScreen();
+  }
+}
+
+/************** Game 2 Flow **************/
+function setupGame2() {
+  matchedPairs = 0;
+  matchingAttempts = 0;
+  currentMatchingIndex = 0;
+  game2Order = shuffle([...Array(MATCHING_DATA.length).keys()]);
+  
+  // Clear previous content
+  leftColumnEl.innerHTML = '';
+  rightColumnEl.innerHTML = '';
+  matchingResultEl.textContent = '';
+  matchingResultEl.className = 'matching-result';
+  
+  // Create cards
+  game2Order.forEach(index => {
+    const data = MATCHING_DATA[index];
+    
+    // Left card
+    const leftCard = document.createElement('div');
+    leftCard.className = 'matching-card';
+    leftCard.textContent = data.left;
+    leftCard.dataset.index = index;
+    leftCard.dataset.side = 'left';
+    leftCard.addEventListener('click', onCardClick);
+    leftColumnEl.appendChild(leftCard);
+    
+    // Right card
+    const rightCard = document.createElement('div');
+    rightCard.className = 'matching-card';
+    rightCard.textContent = data.right;
+    rightCard.dataset.index = index;
+    rightCard.dataset.side = 'right';
+    rightCard.addEventListener('click', onCardClick);
+    rightColumnEl.appendChild(rightCard);
+  });
+  
+  // Shuffle right column cards
+  const rightCards = Array.from(rightColumnEl.children);
+  const shuffledRightCards = shuffle(rightCards);
+  rightColumnEl.innerHTML = '';
+  shuffledRightCards.forEach(card => rightColumnEl.appendChild(card));
+  
+  updateProgress(2, 0);
+  showScreen('game2Screen');
+}
+
+function onCardClick(e) {
+  if (isProcessing) return;
+  
+  reproducirSonidoTap();
+  const card = e.target;
+  const side = card.dataset.side;
+  const index = card.dataset.index;
+  
+  // If card is already matched, do nothing
+  if (card.classList.contains('correct')) return;
+  
+  // If clicking on the same side as already selected, deselect previous
+  if ((side === 'left' && selectedLeftCard) || (side === 'right' && selectedRightCard)) {
+    if (side === 'left') {
+      selectedLeftCard.classList.remove('selected');
+      selectedLeftCard = null;
+    } else {
+      selectedRightCard.classList.remove('selected');
+      selectedRightCard = null;
+    }
+  }
+  
+  // Select the card
+  card.classList.add('selected');
+  if (side === 'left') {
+    selectedLeftCard = card;
+  } else {
+    selectedRightCard = card;
+  }
+  
+  // If both sides are selected, enable check button
+  if (selectedLeftCard && selectedRightCard) {
+    check2Btn.disabled = false;
+  }
+}
+
+function checkMatching() {
+  if (!selectedLeftCard || !selectedRightCard) return;
+  
+  isProcessing = true;
+  matchingAttempts++;
+  
+  const leftIndex = selectedLeftCard.dataset.index;
+  const rightIndex = selectedRightCard.dataset.index;
+  
+  if (leftIndex === rightIndex) {
+    // Correct match
+    reproducirSonidoCorrecto();
+    selectedLeftCard.classList.remove('selected');
+    selectedRightCard.classList.remove('selected');
+    selectedLeftCard.classList.add('correct');
+    selectedRightCard.classList.add('correct');
+    
+    matchedPairs++;
+    updateProgress(2, matchedPairs);
+    
+    // Clear selection
+    selectedLeftCard = null;
+    selectedRightCard = null;
+    
+    // Show success message
+    matchingResultEl.textContent = '¡Correcto!';
+    matchingResultEl.className = 'matching-result correct';
+    
+    // Check if all pairs are matched
+    if (matchedPairs === MATCHING_DATA.length) {
+      // All pairs matched, calculate score
+      correctFirstAttempts += MATCHING_DATA.length; // Assuming all correct on first try for simplicity
+      setTimeout(() => {
+        finishGame();
+      }, 1500);
+    } else {
+      check2Btn.disabled = true;
+      isProcessing = false;
+    }
+  } else {
+    // Incorrect match
+    reproducirSonidoError();
+    selectedLeftCard.classList.remove('selected');
+    selectedRightCard.classList.remove('selected');
+    selectedLeftCard.classList.add('incorrect');
+    selectedRightCard.classList.add('incorrect');
+    
+    // Show error message
+    matchingResultEl.textContent = 'Incorrecto. Inténtalo de nuevo.';
+    matchingResultEl.className = 'matching-result incorrect';
+    
+    // Show continue button
+    check2Btn.style.display = 'none';
+    continue2Btn.style.display = 'inline-flex';
+    isProcessing = false;
+  }
+}
+
+function resetIncorrectCards() {
+  // Reset incorrect cards
+  document.querySelectorAll('.matching-card.incorrect').forEach(card => {
+    card.classList.remove('incorrect');
+  });
+  
+  // Reset buttons
+  check2Btn.style.display = 'inline-flex';
+  continue2Btn.style.display = 'none';
+  
+  // Clear result message
+  matchingResultEl.textContent = '';
+  matchingResultEl.className = 'matching-result';
+}
+
+/************** Transition Screen **************/
+function showTransitionScreen() {
+  showScreen('transitionScreen');
+}
+
+/************** Finish Game **************/
+function finishGame(){
+  stopTimer();
+
+  const finalScore = Math.round((correctFirstAttempts / TOTAL_QUESTIONS) * 100);
+
+  showScreen('resultsScreen');
+
+  el('finalScore').textContent = finalScore;
+  el('finalTime').textContent = fmtTime(elapsed);
+
+  let msg;
+  if (finalScore === 100) {
+    msg = '¡Enhorabuena, puntuación máxima!';
+    el('trophyBox').style.display = 'block';
+    reproducirSonidoVictoria();
+    spawnConfetti();
+  } else {
+    el('trophyBox').style.display = 'none';
+    reproducirSonidoCompletado();
+    msg = '¡Buen trabajo! Sigue practicando';
+  }
+  finalMsgEl.textContent = msg;
+}
+
+/************** Helpers **************/
+function spawnConfetti(){
+  for(let i=0;i<120;i++){
+    setTimeout(()=>{
+      const c=document.createElement('div'); c.className='confetti';
+      const x=Math.random()*window.innerWidth;
+      const ty=window.innerHeight+20;
+      const tx=(Math.random()-.5)*160;
+      const colors=['#ff595e','#1982c4','#6a4c93','#ffca3a','#8ac926','#ff924c','#00c2ff'];
+      c.style.left=x+'px'; c.style.top='-10px';
+      c.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+      const size=6+Math.random()*8; c.style.width=size+'px'; c.style.height=size+'px';
+      c.style.setProperty('--tx', tx+'px'); c.style.setProperty('--ty', ty+'px');
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 3200);
+    }, i*18);
+  }
+}
+
+/************** Routing & Events **************/
+function gotoStart(){
+  showScreen('startScreen');
+  currentFoodIndex = 0; currentMatchingIndex = 0; correctFirstAttempts = 0; elapsed = 0;
+  timer1El.textContent = '00:00'; timer2El.textContent = '00:00';
+  progress1Fill.style.width = '0%'; progress2Fill.style.width = '0%';
+  stopTimer();
+  userInteracted = false;
+  currentQuestionScored = false;
+}
+
+function trackUserInteraction() {
+  if (!userInteracted) {
+    userInteracted = true;
+    unlockAudio();
+  }
+}
+
+playBtn.addEventListener('click', async ()=>{
+  trackUserInteraction();
+  reproducirSonidoTap();
+  unlockAudio();
+
+  loadingIndicator.style.display = 'flex';
+  playBtn.disabled = true;
+
+  try {
+    await preloadSounds();
+    showScreen('sampleScreen');
+  } catch (error) {
+    console.error("Error during setup:", error);
+  } finally {
+    loadingIndicator.style.display = 'none';
+    playBtn.disabled = false;
+  }
+});
+
+playGameBtn.addEventListener('click', () => {
+  trackUserInteraction();
+  reproducirSonidoTap();
+  setupGame1();
+  startTimer();
+});
+
+goToGame2Btn.addEventListener('click', () => {
+  trackUserInteraction();
+  reproducirSonidoTap();
+  setupGame2();
+});
+
+check1Btn.addEventListener('click', checkAnswer);
+
+continue1Btn.addEventListener('click', () => {
+  trackUserInteraction();
+  reproducirSonidoTap();
+  moveToNextFood();
+});
+
+check2Btn.addEventListener('click', checkMatching);
+
+continue2Btn.addEventListener('click', () => {
+  trackUserInteraction();
+  reproducirSonidoTap();
+  resetIncorrectCards();
+});
+
+el('backToMenuBtn').addEventListener('click', ()=>{
+  trackUserInteraction();
+  reproducirSonidoTap();
+  gotoStart();
+});
+
+el('muteBtn').addEventListener('click', ()=>{
+  trackUserInteraction();
+  isMuted = !isMuted;
+  el('muteBtn').textContent = isMuted ? '🔇' : '🔊';
+});
+
+document.addEventListener('click', trackUserInteraction, { once: false });
+document.addEventListener('touchstart', trackUserInteraction, { once: false });
+document.addEventListener('keydown', trackUserInteraction, { once: false });
+
+gotoStart();
+</script>
+</body>
+</html>
