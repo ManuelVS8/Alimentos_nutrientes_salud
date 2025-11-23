@@ -25,7 +25,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
     min-height:100vh; display:flex; justify-content:center; align-items:center; color:#333; padding:10px;
-    touch-action: manipulation; /* Mejora la respuesta táctil */
+    touch-action: manipulation;
   }
   .game-container{
     background:var(--white); border-radius:16px; box-shadow:0 12px 24px rgba(0,0,0,.12);
@@ -38,7 +38,7 @@
   .subtitle{ color:var(--blue-700); font-size:clamp(1rem,3.5vw,1.25rem); margin-top:.25rem; }
   .highlight-keyword{ color:var(--orange); font-weight:800; }
 
-  /* Global UI bits to mirror style of reference app */
+  /* Global UI bits */
   .btn{ color:#fff; border:none; padding:.75rem 1.2rem; border-radius:10px; cursor:pointer; font-weight:800;
         transition:transform .08s ease, box-shadow .2s ease, background-color .25s ease; min-width:140px; height:48px;
         display:inline-flex; align-items:center; justify-content:center; }
@@ -55,7 +55,7 @@
   .screen.active{ display:block; }
   @keyframes fadeIn{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
 
-  /* Top controls (timer / progress / level) */
+  /* Top controls */
   .game-info{ display:flex; gap:.6rem; align-items:center; justify-content:space-between; margin:.4rem 0 1rem; flex-wrap:wrap; }
   .timer, .level-indicator{ font-weight:900; color:var(--blue-700); font-size:clamp(.95rem,2.3vw,1.15rem); }
   .progress-bar{ flex:1; height:10px; background:#e6f2ff; border-radius:999px; overflow:hidden; }
@@ -66,17 +66,6 @@
   .advice-box{ background:var(--panel); border-left:4px solid var(--blue-700); padding:1rem 1.2rem; border-radius:12px;
                color:var(--blue-700); max-width:760px; text-align:center; font-size:clamp(1rem,3vw,1.15rem); }
   .start-image{ max-width: 300px; width: 100%; margin: 0 auto; display: block; }
-  .intro-text{ 
-    font-size: clamp(1.2rem, 4vw, 1.6rem); 
-    font-weight: 600; 
-    color: var(--blue-700);
-    text-align: center;
-    margin: 2rem 0;
-  }
-  .intro-text strong {
-      color: var(--orange);
-      font-weight: 800;
-  }
 
   /* Sound button */
   .mute-btn{ position:absolute; top:.8rem; right:.8rem; background:var(--orange); color:#fff; border:2px solid #fff; width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; z-index:20; }
@@ -85,10 +74,10 @@
   /* Game layout */
   .board{ display:flex; flex-direction:column; gap:.8rem; align-items:center; }
 
-  /* Image stage - MEJORADO Y RESPONSIVE */
+  /* Image stage */
   .image-container { 
     width:100%; 
-    max-width:450px; /* Aumentado el tamaño máximo */
+    max-width:450px;
     margin:0 auto; 
     padding:.8rem; 
     border:1px solid #ddd; 
@@ -102,7 +91,7 @@
     object-fit: contain; 
   }
 
-  /* Dropdown styling (Select List) - REDUCIDO */
+  /* Dropdown styling */
   .select-container { position:relative; max-width: 240px; width: 100%; margin: 0.5rem auto; text-align: center; }
   .select-label { display: block; margin-bottom: 0.4rem; font-weight: 800; color: var(--blue-700); font-size: 0.95rem; }
   .custom-select {
@@ -170,7 +159,7 @@
   @keyframes correct-flash { 0% { background-color: #ecfff4; } 50% { background-color: var(--green); } 100% { background-color: #ecfff4; } }
   @keyframes incorrect-flash { 0% { background-color: #fff1f1; } 50% { background-color: var(--red); } 100% { background-color: #fff1f1; } }
 
-  /* Buttons area - REDUCIDO EL GAP */
+  /* Buttons area */
   .game-buttons-area { display: flex; justify-content: center; gap: 1rem; margin-top: 0.8rem; }
 
   /* Feedback message for Game 1 */
@@ -201,7 +190,7 @@
     border: 1px solid var(--red);
   }
 
-  /* Matching game styles for Game 2 - OBLIGATORIO DOS COLUMNAS */
+  /* Matching game styles */
   .matching-container {
     display: flex;
     flex-direction: column;
@@ -212,9 +201,9 @@
   }
   
   .matching-columns {
-    display: flex; /* Siempre flex para mantener dos columnas */
+    display: flex;
     justify-content: space-between;
-    gap: 1rem; /* Reducido el gap para móviles */
+    gap: 1rem;
   }
   
   .matching-column {
@@ -234,16 +223,16 @@
     color: var(--blue-700);
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: 80px; /* Altura mínima para consistencia */
+    min-height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    user-select: none; /* Evitar selección de texto */
-    -webkit-user-select: none; /* Para Safari */
-    -moz-user-select: none; /* Para Firefox */
-    -ms-user-select: none; /* Para IE/Edge */
-    touch-action: manipulation; /* Mejora la respuesta táctil */
-    position: relative; /* Necesario para z-index */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: manipulation;
+    position: relative;
     z-index: 1;
   }
   
@@ -263,7 +252,7 @@
     background-color: var(--green);
     border-color: var(--green);
     color: white;
-    cursor: default; /* No se puede hacer clic en tarjetas correctas */
+    cursor: default;
     z-index: 2;
   }
   
@@ -271,7 +260,7 @@
     background-color: var(--red);
     border-color: var(--red);
     color: white;
-    animation: shake 0.5s; /* Animación de error */
+    animation: shake 0.5s;
     z-index: 2;
   }
   
@@ -317,7 +306,131 @@
       line-height: 1.4;
   }
 
-  /* Confetti and Loading (unchanged) */
+  /* Hall of Fame Styles */
+  .hall-of-fame {
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .hall-of-fame-title {
+    color: var(--blue-700);
+    font-weight: 800;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 0.8rem;
+  }
+  
+  .hall-of-fame-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  
+  .hall-of-fame-table th {
+    background: var(--blue-600);
+    color: white;
+    padding: 0.5rem;
+    text-align: left;
+  }
+  
+  .hall-of-fame-table td {
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .hall-of-fame-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .hall-of-fame-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .hall-of-fame-error, .hall-of-fame-loading {
+    padding: 1rem;
+    text-align: center;
+    color: var(--blue-700);
+    font-style: italic;
+  }
+  
+  .hall-of-fame-error {
+    color: var(--red);
+  }
+  
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .modal-title {
+    color: var(--blue);
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .modal-info {
+    margin-bottom: 1.5rem;
+    color: var(--blue-700);
+    font-weight: 600;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--blue-700);
+    font-weight: 600;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 2px solid #d3e2ff;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--blue-600);
+  }
+  
+  .modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  /* Confetti and Loading */
   .confetti{ position:fixed; width:10px; height:10px; border-radius:50%; animation: confetti-fall 3s linear forwards; z-index:999; }
   @keyframes confetti-fall{ 0%{ transform:translate(0, -20px) rotate(0); opacity:1;} 100%{ transform:translate(var(--tx), var(--ty)) rotate(360deg); opacity:0; } }
   .loading-indicator {
@@ -331,17 +444,10 @@
   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   .loading-text { color: white; font-size: 1.2rem; text-align: center; }
 
-  /* Responsive adjustments - MANTENIENDO DOS COLUMNAS */
+  /* Responsive adjustments */
   @media (max-width: 768px) {
-    .matching-columns {
-      gap: 0.5rem; /* Gap más pequeño en móviles */
-    }
-    
-    .matching-card {
-      padding: 0.8rem;
-      font-size: 0.9rem;
-      min-height: 70px;
-    }
+    .matching-columns { gap: 0.5rem; }
+    .matching-card { padding: 0.8rem; font-size: 0.9rem; min-height: 70px; }
   }
 </style>
 </head>
@@ -360,6 +466,15 @@
         <strong>¡Buena suerte!</strong>
       </div>
       <button class="btn btn-primary" id="playBtn">Comenzar</button>
+      
+      <!-- Hall of Fame -->
+      <div class="hall-of-fame" id="hallOfFame">
+        <div class="hall-of-fame-title">🏆 Mejores puntuaciones 🏆</div>
+        <div id="hallOfFameContent">
+          <!-- Scores will be loaded here -->
+        </div>
+      </div>
+      
       <img class="start-image" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Ni%C3%B1os.png" alt="Children learning">
     </div>
   </section>
@@ -408,7 +523,6 @@
         <button class="btn btn-primary" id="continue1Btn" style="display:none;">Continuar</button>
       </div>
       
-      <!-- Feedback message for Game 1 -->
       <div id="feedbackMessage" class="feedback-message"></div>
     </div>
   </section>
@@ -446,7 +560,6 @@
         </div>
       </div>
       <div class="matching-result" id="matchingResult"></div>
-      <!-- Eliminado el área de botones -->
     </div>
   </section>
 
@@ -471,12 +584,177 @@
 
 <div class="loading-indicator" id="loadingIndicator" style="display: none;">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Cargando audios...</div>
+  <div class="loading-text">Cargando...</div>
+</div>
+
+<!-- Modal para enviar puntuación -->
+<div id="submitModal" style="display: none;">
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h2 class="modal-title">¡Felicidades!</h2>
+      <div class="modal-info" id="modal-info">
+        Tu puntuación: <span id="modalScore"></span><br>
+        Tiempo: <span id="modalTime"></span>
+      </div>
+      <div class="form-group">
+        <label for="playerName" class="form-label">Nombre:</label>
+        <input type="text" id="playerName" class="form-input" placeholder="Introduce tu nombre" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label for="playerSurname" class="form-label">Apellido:</label>
+        <input type="text" id="playerSurname" class="form-input" placeholder="Introduce tu apellido" maxlength="20">
+      </div>
+      <div class="modal-buttons">
+        <button id="submitScoreBtn" class="btn btn-primary">Guardar puntuación</button>
+        <button id="discardScoreBtn" class="btn btn-ghost">No guardar</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
+// ===================================================================
+// Bloque de Puntuación y Hall de la Fama
+// ===================================================================
+
+// ** 1. CONFIGURACIÓN **
+const SHEET_NAME = "Alimentos";
+const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwPDxbGmyC9WuNjaLuDgDSgrt74hMkyYTcAxyLoJ6qlI-TBmsV6W1ml5AXKC3TyMA8CQ/exec"; 
+
+// --- FUNCIONES DE RED (Hall of Fame y Envío) ---
+
+function formatMixedTime(s) {
+  const m = Math.floor(s/60);
+  const sec = (s%60).toFixed(1).padStart(4, '0');
+  return `${m}m:${sec}s`;
+}
+
+async function loadHallOfFame() {
+  const container = el('hallOfFameContent');
+  
+  if (!APP_SCRIPT_URL || APP_SCRIPT_URL.includes("PEGAR_AQUI")) {
+    container.innerHTML = '<div class="hall-of-fame-error">URL de script no configurada.</div>';
+    return;
+  }
+
+  try {
+    const uniqueUrl = APP_SCRIPT_URL + `?sheetName=${SHEET_NAME}&v=` + Date.now();
+
+    container.innerHTML = '<div class="hall-of-fame-loading">Cargando...</div>';
+
+    const res = await fetch(uniqueUrl); 
+    const json = await res.json();
+    
+    if (json.success && json.data && json.data.length > 0) {
+      let html = `
+        <table class="hall-of-fame-table">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Nombre</th>
+              <th>Puntos</th> 
+              <th>Tiempo</th>
+            </tr>
+          </thead>
+          <tbody>`;
+      
+      json.data.forEach((row, i) => {
+        const nombre = row.name || "Anónimo";
+        const apellidoInicial = row.surname ? row.surname.charAt(0) + '.' : ""; 
+        const tiempo = row.time ? formatMixedTime(row.time) : "--";
+        const puntuacion = row.score || 0; 
+        
+        html += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${nombre} ${apellidoInicial}</td>
+            <td>${puntuacion}</td>
+            <td>${tiempo}</td>
+          </tr>`;
+      });
+      
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    } else if (json.success) {
+      container.innerHTML = '<div class="hall-of-fame-loading">Sé el primero en aparecer aquí.</div>';
+    } else {
+      throw new Error(json.error || "Error en datos");
+    }
+  } catch (e) {
+    console.error("Error cargando ranking:", e);
+    container.innerHTML = `<div class="hall-of-fame-error">No se pudo cargar. ${e.message}</div>`;
+  }
+}
+
+async function submitScore(name, surname, time, score, buttonElement) {
+  const originalText = buttonElement.textContent;
+  buttonElement.disabled = true;
+  buttonElement.innerHTML = `<span style="display:inline-block; animation: spin 1s linear infinite;">⏳</span> Guardando...`;
+  
+  try {
+    const payload = { name, surname, time, score, sheetName: SHEET_NAME }; 
+    
+    const res = await fetch(APP_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    
+    const json = await res.json();
+    
+    if (json.result === 'success' || json.success) {
+      // --- CAMBIO: Cierre inmediato y recarga en segundo plano ---
+      el('submitModal').style.display = 'none';
+      loadHallOfFame(); // Se ejecuta en segundo plano
+      
+    } else {
+      throw new Error(json.error || "Error desconocido del servidor");
+    }
+  } catch (e) {
+    console.error("Error detallado al guardar:", e);
+    // --- Mensaje de error también en el modal ---
+    const modalInfo = el('modal-info');
+    modalInfo.innerHTML = `<p style="color: var(--red); font-weight: 700;">Hubo un error al guardar.</p>`;
+  } finally {
+    // Restaurar el botón para que pueda intentarlo de nuevo si falla
+    buttonElement.disabled = false;
+    buttonElement.textContent = originalText;
+  }
+}
+
+function showSubmitModal(time, score) {
+  el('submitModal').style.display = 'block';
+  el('modalTime').textContent = formatMixedTime(time);
+  el('modalScore').textContent = score;
+  
+  const subBtn = el('submitScoreBtn'), discBtn = el('discardScoreBtn');
+  const newSub = subBtn.cloneNode(true), newDisc = discBtn.cloneNode(true);
+  subBtn.replaceWith(newSub); discBtn.replaceWith(newDisc);
+  
+  newSub.addEventListener('click', () => {
+    reproducirSonidoTap();
+    const name = el('playerName').value.trim();
+    const surname = el('playerSurname').value.trim();
+    if (name && surname) {
+      submitScore(name, surname, time, score, newSub);
+    } else {
+      alert('Introduce nombre y apellidos');
+    }
+  });
+  
+  newDisc.textContent = 'No guardar';
+  newDisc.addEventListener('click', () => {
+    reproducirSonidoTap();
+    el('submitModal').style.display = 'none';
+    el('playerName').value = ''; 
+    el('playerSurname').value = '';
+  });
+}
+
+// ===================================================================
+// Resto del código del juego
+// ===================================================================
+
 /************** Data **************/
-// CORREGIDO: URLs de imágenes con /raw/ en lugar de /blob/
 const FOODS_DATA = [
   { food: 'Azucar', nutrient: 'Hidratos de carbono', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/main/Aparatos/Alimentos/Azucar.png' },
   { food: 'Pan', nutrient: 'Hidratos de carbono', image: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/main/Aparatos/Alimentos/Pan.png' },
@@ -506,7 +784,6 @@ const MATCHING_DATA = [
 const TOTAL_QUESTIONS = 18; // 14 + 4
 
 /************** Audio **************/
-// CORREGIDO: URLs de audio con /raw/ en lugar de /blob/
 const soundFiles = {
   completed: 'https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/main/Completado.mp3',
   correct:   'https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/main/Correcto.mp3',
@@ -596,13 +873,17 @@ const matchingResultEl = el('matchingResult');
 const leftColumnEl = el('leftColumn');
 const rightColumnEl = el('rightColumn');
 const feedbackMessageEl = el('feedbackMessage');
+const submitModal = el('submitModal');
+const submitScoreBtn = el('submitScoreBtn');
+const discardScoreBtn = el('discardScoreBtn');
+const playerNameInput = el('playerName');
+const playerSurnameInput = el('playerSurname');
+const modalScoreEl = el('modalScore');
+const modalTimeEl = el('modalTime');
 
 let game1Order = [];
 let game2Order = [];
 let currentFoodIndex = 0;
-let currentMatchingIndex = 0;
-let correctFirstAttempts = 0;
-let currentQuestionScored = false;
 let timerInt = null;
 let elapsed = 0;
 
@@ -610,15 +891,16 @@ let currentSelection = null;
 let isProcessing = false;
 let userInteracted = false;
 
-// Matching game state
 let selectedLeftCard = null;
 let selectedRightCard = null;
 let matchedPairs = 0;
-let matchingAttempts = 0;
 
-// Contadores de intentos para la puntuación
-let game1Attempts = 0;
-let game2Attempts = 0;
+// Contadores de respuestas correctas
+let game1CorrectAnswers = 0;
+let game2CorrectAnswers = 0;
+
+let finalScore = 0;
+let finalTimeValue = 0;
 
 /************** Utilities **************/
 function fmtTime(s){ const m=Math.floor(s/60).toString().padStart(2,'0'); const ss=(s%60).toString().padStart(2,'0'); return `${m}:${ss}`; }
@@ -708,6 +990,7 @@ document.addEventListener('click', (e) => {
 /************** Game 1 Flow **************/
 function setupGame1() {
   currentFoodIndex = 0;
+  game1CorrectAnswers = 0;
   game1Order = shuffle([...Array(FOODS_DATA.length).keys()]);
   createDropdownOptions(NUTRIENTS_OPTIONS);
   showCurrentFood();
@@ -717,7 +1000,6 @@ function setupGame1() {
 
 function showCurrentFood() {
   isProcessing = false;
-  currentQuestionScored = false;
   const currentFood = FOODS_DATA[game1Order[currentFoodIndex]];
   foodImg.src = currentFood.image;
   foodImg.alt = `Imagen de ${currentFood.food}`;
@@ -730,7 +1012,6 @@ function showCurrentFood() {
   check1Btn.disabled = false;
   continue1Btn.style.display = 'none';
   
-  // Hide feedback message
   feedbackMessageEl.classList.remove('show');
   feedbackMessageEl.textContent = '';
 }
@@ -742,33 +1023,22 @@ function checkAnswer() {
   const currentFood = FOODS_DATA[game1Order[currentFoodIndex]];
   const correctAnswer = currentFood.nutrient;
 
-  // Incrementar intentos del juego 1
-  game1Attempts++;
-
   if (currentSelection === correctAnswer) {
-    if (!currentQuestionScored) {
-        correctFirstAttempts++;
-    }
-    currentQuestionScored = true;
-
+    game1CorrectAnswers++;
     reproducirSonidoCorrecto();
     customSelect1.classList.add('correct');
     select1SelectedEl.classList.add('correct-blink');
     check1Btn.disabled = true;
 
-    // Show correct feedback
     feedbackMessageEl.textContent = '¡Correcto!';
     feedbackMessageEl.className = 'feedback-message correct show';
 
-    // Eliminado el tiempo de espera, pasamos directamente a la siguiente pregunta
     moveToNextFood();
   } else {
-    currentQuestionScored = true;
     reproducirSonidoError();
     customSelect1.classList.add('incorrect');
     select1SelectedEl.classList.add('incorrect-blink');
     
-    // Show incorrect feedback with correct answer
     feedbackMessageEl.innerHTML = `Incorrecto. La respuesta correcta es: <strong>${correctAnswer}</strong>`;
     feedbackMessageEl.className = 'feedback-message incorrect show';
     
@@ -789,30 +1059,24 @@ function moveToNextFood() {
   }
 }
 
-/************** Game 2 Flow - CORREGIDO **************/
+/************** Game 2 Flow **************/
 function setupGame2() {
-  // Resetear el estado de procesamiento al iniciar el juego 2
   isProcessing = false;
   matchedPairs = 0;
-  matchingAttempts = 0;
-  currentMatchingIndex = 0;
+  game2CorrectAnswers = 0;
   game2Order = shuffle([...Array(MATCHING_DATA.length).keys()]);
   
-  // Limpiar selecciones anteriores
   selectedLeftCard = null;
   selectedRightCard = null;
   
-  // Clear previous content
   leftColumnEl.innerHTML = '';
   rightColumnEl.innerHTML = '';
   matchingResultEl.textContent = '';
   matchingResultEl.className = 'matching-result';
   
-  // Create cards
   game2Order.forEach(index => {
     const data = MATCHING_DATA[index];
     
-    // Left card
     const leftCard = document.createElement('div');
     leftCard.className = 'matching-card';
     leftCard.textContent = data.left;
@@ -821,7 +1085,6 @@ function setupGame2() {
     leftCard.addEventListener('click', handleCardClick);
     leftColumnEl.appendChild(leftCard);
     
-    // Right card
     const rightCard = document.createElement('div');
     rightCard.className = 'matching-card';
     rightCard.textContent = data.right;
@@ -831,7 +1094,6 @@ function setupGame2() {
     rightColumnEl.appendChild(rightCard);
   });
   
-  // Shuffle right column cards
   const rightCards = Array.from(rightColumnEl.children);
   const shuffledRightCards = shuffle(rightCards);
   rightColumnEl.innerHTML = '';
@@ -850,12 +1112,9 @@ function handleCardClick(e) {
   reproducirSonidoTap();
   const card = e.currentTarget;
   const side = card.dataset.side;
-  const index = card.dataset.index;
   
-  // If card is already matched, do nothing
   if (card.classList.contains('correct')) return;
   
-  // If clicking on the same card, deselect it
   if ((side === 'left' && selectedLeftCard === card) || (side === 'right' && selectedRightCard === card)) {
     card.classList.remove('selected');
     if (side === 'left') {
@@ -866,7 +1125,6 @@ function handleCardClick(e) {
     return;
   }
   
-  // If clicking on same side as already selected, deselect previous
   if ((side === 'left' && selectedLeftCard) || (side === 'right' && selectedRightCard)) {
     if (side === 'left') {
       selectedLeftCard.classList.remove('selected');
@@ -877,7 +1135,6 @@ function handleCardClick(e) {
     }
   }
   
-  // Select the card
   card.classList.add('selected');
   if (side === 'left') {
     selectedLeftCard = card;
@@ -885,7 +1142,6 @@ function handleCardClick(e) {
     selectedRightCard = card;
   }
   
-  // If both sides are selected, automatically check the match
   if (selectedLeftCard && selectedRightCard) {
     setTimeout(() => {
       checkMatching();
@@ -897,14 +1153,12 @@ function checkMatching() {
   if (!selectedLeftCard || !selectedRightCard) return;
   
   isProcessing = true;
-  matchingAttempts++;
-  game2Attempts++; // Incrementar intentos del juego 2
   
   const leftIndex = selectedLeftCard.dataset.index;
   const rightIndex = selectedRightCard.dataset.index;
   
   if (leftIndex === rightIndex) {
-    // Correct match
+    game2CorrectAnswers++;
     reproducirSonidoCorrecto();
     selectedLeftCard.classList.remove('selected');
     selectedRightCard.classList.remove('selected');
@@ -914,15 +1168,12 @@ function checkMatching() {
     matchedPairs++;
     updateProgress(2, matchedPairs);
     
-    // Show success message
     matchingResultEl.textContent = '¡Correcto!';
     matchingResultEl.className = 'matching-result correct';
     
-    // Clear selection
     selectedLeftCard = null;
     selectedRightCard = null;
     
-    // Check if all pairs are matched
     if (matchedPairs === MATCHING_DATA.length) {
       setTimeout(() => {
         finishGame();
@@ -931,18 +1182,15 @@ function checkMatching() {
       isProcessing = false;
     }
   } else {
-    // Incorrect match
     reproducirSonidoError();
     selectedLeftCard.classList.remove('selected');
     selectedRightCard.classList.remove('selected');
     selectedLeftCard.classList.add('incorrect');
     selectedRightCard.classList.add('incorrect');
     
-    // Show error message
     matchingResultEl.textContent = 'Incorrecto. Inténtalo de nuevo.';
     matchingResultEl.className = 'matching-result incorrect';
     
-    // Reset after a short delay
     setTimeout(() => {
       selectedLeftCard.classList.remove('incorrect');
       selectedRightCard.classList.remove('incorrect');
@@ -957,7 +1205,6 @@ function checkMatching() {
 
 /************** Transition Screen **************/
 function showTransitionScreen() {
-  // Resetear el estado de procesamiento al mostrar la pantalla de transición
   isProcessing = false;
   showScreen('transitionScreen');
 }
@@ -966,17 +1213,16 @@ function showTransitionScreen() {
 function finishGame(){
   stopTimer();
 
-  // Calcular puntuación según la fórmula: 18 ÷ número de intentos × 100
-  const totalAttempts = game1Attempts + game2Attempts;
-  const finalScore = Math.round((TOTAL_QUESTIONS / totalAttempts) * 100);
+  const totalCorrectAnswers = game1CorrectAnswers + game2CorrectAnswers;
+  const score = Math.round((totalCorrectAnswers / TOTAL_QUESTIONS) * 100);
 
   showScreen('resultsScreen');
 
-  el('finalScore').textContent = finalScore;
+  el('finalScore').textContent = score;
   el('finalTime').textContent = fmtTime(elapsed);
 
   let msg;
-  if (finalScore === 100) {
+  if (score === 100) {
     msg = '¡Enhorabuena, puntuación máxima!';
     el('trophyBox').style.display = 'block';
     reproducirSonidoVictoria();
@@ -987,6 +1233,8 @@ function finishGame(){
     msg = '¡Buen trabajo! Sigue practicando';
   }
   finalMsgEl.textContent = msg;
+  
+  showSubmitModal(elapsed, score);
 }
 
 /************** Helpers **************/
@@ -1011,21 +1259,20 @@ function spawnConfetti(){
 /************** Routing & Events **************/
 function gotoStart(){
   showScreen('startScreen');
-  currentFoodIndex = 0; currentMatchingIndex = 0; correctFirstAttempts = 0; elapsed = 0;
+  currentFoodIndex = 0; elapsed = 0;
   timer1El.textContent = '00:00'; timer2El.textContent = '00:00';
   progress1Fill.style.width = '0%'; progress2Fill.style.width = '0%';
   stopTimer();
   userInteracted = false;
-  currentQuestionScored = false;
   
-  // Resetear contadores de intentos
-  game1Attempts = 0;
-  game2Attempts = 0;
+  game1CorrectAnswers = 0;
+  game2CorrectAnswers = 0;
   
-  // Resetear estado de procesamiento
   isProcessing = false;
   selectedLeftCard = null;
   selectedRightCard = null;
+  
+  loadHallOfFame();
 }
 
 function trackUserInteraction() {
